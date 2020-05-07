@@ -89,6 +89,10 @@ class _RLearner(_OrthoLearner):
     discrete_treatment: bool
         Whether the treatment values should be treated as categorical, rather than continuous, quantities
 
+    categories: 'auto' or list
+        The categories to use when encoding discrete treatments (or 'auto' to use the unique sorted values).
+        The first category will be treated as the control treatment.
+
     n_splits: int, cross-validation generator or an iterable
         Determines the cross-validation splitting strategy.
         Possible inputs for cv are:
@@ -197,7 +201,7 @@ class _RLearner(_OrthoLearner):
     """
 
     def __init__(self, model_y, model_t, model_final,
-                 discrete_treatment, n_splits, random_state):
+                 discrete_treatment, categories, n_splits, random_state):
         class ModelNuisance:
             """
             Nuisance model fits the model_y and model_t at fit time and at predict time
@@ -276,6 +280,7 @@ class _RLearner(_OrthoLearner):
                          ModelFinal(model_final),
                          discrete_treatment=discrete_treatment,
                          discrete_instrument=False,  # no instrument, so doesn't matter
+                         categories=categories,
                          n_splits=n_splits,
                          random_state=random_state)
 
